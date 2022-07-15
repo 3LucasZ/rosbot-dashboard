@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/rosbot-dashboard/static/css/main.533fe791.css",
-    "main.js": "/rosbot-dashboard/static/js/main.54ed6e66.js",
+    "main.js": "/rosbot-dashboard/static/js/main.3adab6a4.js",
     "static/js/787.3cba687d.chunk.js": "/rosbot-dashboard/static/js/787.3cba687d.chunk.js",
     "static/media/bootstrap-icons.woff?": "/rosbot-dashboard/static/media/bootstrap-icons.c15abee23f0098f0490f.woff",
     "static/media/bootstrap-icons.woff2?": "/rosbot-dashboard/static/media/bootstrap-icons.3518ff4dccdeac177ccf.woff2",
     "index.html": "/rosbot-dashboard/index.html",
     "main.533fe791.css.map": "/rosbot-dashboard/static/css/main.533fe791.css.map",
-    "main.54ed6e66.js.map": "/rosbot-dashboard/static/js/main.54ed6e66.js.map",
+    "main.3adab6a4.js.map": "/rosbot-dashboard/static/js/main.3adab6a4.js.map",
     "787.3cba687d.chunk.js.map": "/rosbot-dashboard/static/js/787.3cba687d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.533fe791.css",
-    "static/js/main.54ed6e66.js"
+    "static/js/main.3adab6a4.js"
   ]
 }
