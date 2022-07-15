@@ -4,44 +4,49 @@ import "../../styles/components.css";
 class Publisher extends Component {
   render() {
     return (
-      <div>
+      <div className="bg-light">
         <form
-          onSubmit={(e) => this.props.widget.onPublish(this.props.widget, e)}
+          onSubmit={(e) => this.props.handlers.onPublish(this.props.widget, e)}
         >
           <label>
-            Topic:
+            {"Topic: "}
             <input
               type="text"
               value={this.props.widget.topic}
               onChange={(e) =>
-                this.props.widget.onEditTopic(this.props.widget, e)
+                this.props.handlers.onEditTopic(this.props.widget, e)
               }
             />
           </label>
           <br />
           <label>
-            Type:
+            {"Type: "}
             <input
               type="text"
               value={this.props.type}
               onChange={(e) =>
-                this.props.widget.onEditDatatype(this.props.widget, e)
+                this.props.handlers.onEditDatatype(this.props.widget, e)
               }
             />
           </label>
           <br />
           <label>
-            Message:
+            {"Message: "}
             <input
               type="text"
               value={this.props.data}
               onChange={(e) =>
-                this.props.widget.onEditData(this.props.widget, e)
+                this.props.handlers.onEditData(this.props.widget, e)
               }
             />
           </label>
           <br />
-          <input type="submit" value="Publish" />
+          <input
+            type="submit"
+            value="Publish"
+            className="btn btn-secondary"
+            style={{ marginTop: 10 }}
+          />
         </form>
       </div>
     );

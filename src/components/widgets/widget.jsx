@@ -27,17 +27,22 @@ class Widget extends Component {
           className="bg-dark text-end"
           style={this.props.lock ? noHeaderStyle : headerStyle}
           onMouseDown={(e) =>
-            this.props.widget.onWidgetDown(this.props.widget, e)
+            this.props.handlers.onWidgetDown(this.props.widget, e)
           }
           onMouseMove={(e) =>
-            this.props.widget.onWidgetDrag(this.props.widget, e)
+            this.props.handlers.onWidgetDrag(this.props.widget, e)
           }
-          onMouseUp={(e) => this.props.widget.onWidgetUp(this.props.widget, e)}
+          onMouseUp={(e) =>
+            this.props.handlers.onWidgetUp(this.props.widget, e)
+          }
+          onMouseLeave={(e) =>
+            this.props.handlers.onWidgetUp(this.props.widget, e)
+          }
         >
           <button
-            class="btn btn-danger"
+            className="btn btn-danger"
             onClick={() =>
-              this.props.widget.onWidgetDelete(this.props.widget.id)
+              this.props.handlers.onWidgetDelete(this.props.widget.id)
             }
           >
             X
@@ -47,7 +52,10 @@ class Widget extends Component {
           className={this.props.lock ? "bg-none" : "bg-light"}
           style={bodyStyle}
         >
-          <ComponentType widget={this.props.widget} />
+          <ComponentType
+            widget={this.props.widget}
+            handlers={this.props.handlers}
+          />
         </div>
       </div>
     );

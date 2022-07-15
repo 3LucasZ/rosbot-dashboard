@@ -10,7 +10,26 @@ class App extends React.Component {
     widgets: [],
     lock: false,
     nextID: 0,
+    message: "",
   };
+  //dragging
+  meta = {
+    initX: 200,
+    initY: 200,
+    clickX: 0,
+    clickY: 0,
+    drag: false,
+  };
+
+  componentDidMount() {
+    fetch("/api")
+      .then((res) => res.json())
+      .then((json) => {
+        this.setState({
+          message: json.message,
+        });
+      });
+  }
 
   render() {
     return (
@@ -23,9 +42,26 @@ class App extends React.Component {
         />
         {this.state.widgets.map((widget) => {
           return (
-            <Widget lock={this.state.lock} key={widget.id} widget={widget} />
+            <Widget
+              lock={this.state.lock}
+              key={widget.id}
+              widget={widget}
+              handlers={{
+                onWidgetDown: this.handleWidgetDown,
+                onWidgetDrag: this.handleWidgetDrag,
+                onWidgetUp: this.handleWidgetUp,
+                //delete
+                onWidgetDelete: this.handleWidgetDelete,
+                //ROS
+                onEditTopic: this.handleEditTopic,
+                onEditDatatype: this.handleEditDatatype,
+                onEditData: this.handleEditData,
+                onPublish: this.handlePublish,
+              }}
+            />
           );
         })}
+        <h1>Messages from server: {this.state.message}</h1>
       </div>
     );
   }
@@ -44,22 +80,6 @@ class App extends React.Component {
       topic: "/chatter",
       datatype: "std_msgs/String",
       data: '{ "data": "Hello" }',
-      //dragging
-      initX: 200,
-      initY: 200,
-      clickX: 0,
-      clickY: 0,
-      drag: false,
-      onWidgetDown: this.handleWidgetDown,
-      onWidgetDrag: this.handleWidgetDrag,
-      onWidgetUp: this.handleWidgetUp,
-      //delete
-      onWidgetDelete: this.handleWidgetDelete,
-      //ROS
-      onEditTopic: this.handleEditTopic,
-      onEditDatatype: this.handleEditDatatype,
-      onEditData: this.handleEditData,
-      onPublish: this.handlePublish,
     });
     this.setState({
       widgets: widgets,
@@ -87,25 +107,22 @@ class App extends React.Component {
 
   // Widget: drag
   handleWidgetDown = (widget, e) => {
-    //console.log("Clicked ", widget.id);
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    widgets[i].initX = widgets[i].x;
-    widgets[i].initY = widgets[i].y;
-    widgets[i].clickX = e.clientX;
-    widgets[i].clickY = e.clientY;
-    if (!this.state.lock) widgets[i].drag = true;
-    this.setState({
-      widgets: widgets,
-    });
+    //console.log("Clicked ", widget.id);
+    this.meta.initX = widgets[i].x;
+    this.meta.initY = widgets[i].y;
+    this.meta.clickX = e.clientX;
+    this.meta.clickY = e.clientY;
+    if (!this.state.lock) this.meta.drag = true;
   };
   handleWidgetDrag = (widget, e) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    if (widgets[i].drag) {
+    if (this.meta.drag) {
       //console.log("Dragged ", widget.id);
-      widgets[i].x = widgets[i].initX - widgets[i].clickX + e.clientX;
-      widgets[i].y = widgets[i].initY - widgets[i].clickY + e.clientY;
+      widgets[i].x = this.meta.initX - this.meta.clickX + e.clientX;
+      widgets[i].y = this.meta.initY - this.meta.clickY + e.clientY;
       //console.log("New coord: ", widgets[i].x, ",", widgets[i].y);
       this.setState({
         widgets: widgets,
@@ -114,12 +131,7 @@ class App extends React.Component {
   };
   handleWidgetUp = (widget, e) => {
     //console.log("Lifted ", widget.id);
-    const widgets = [...this.state.widgets];
-    const i = widgets.indexOf(widget);
-    widgets[i].drag = false;
-    this.setState({
-      widgets: widgets,
-    });
+    this.meta.drag = false;
   };
 
   // Widget: ROS
@@ -140,16 +152,15 @@ class App extends React.Component {
       widgets: widgets,
     });
   };
-  handleEditData = (widget, e) => {
+  handleEditData = (widget, data) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    widgets[i].data = e.target.value;
+    widgets[i].data = data;
     this.setState({
       widgets: widgets,
     });
   };
-  handlePublish = (widget, e) => {
-    e.preventDefault();
+  handlePublish = (widget) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
     var topic = new ROSLIB.Topic({

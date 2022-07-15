@@ -5,10 +5,12 @@ import ROSJoystick from "./widgets/ros-joystick";
 class Sidebar extends Component {
   buttons = [
     {
+      key: 0,
       type: Publisher,
       label: "Publisher",
     },
     {
+      key: 1,
       type: ROSJoystick,
       label: "Joystick",
     },
@@ -18,13 +20,22 @@ class Sidebar extends Component {
       <div>
         <div>
           <button
-            class="btn btn-secondary"
-            style={{ display: "block" }}
+            className="btn btn-secondary"
+            //style={{ display: "block" }}
             onClick={this.props.onToggleLock}
           >
             <i
-              class={this.props.lock ? "bi bi-lock-fill" : "bi bi-unlock-fill"}
+              className={
+                this.props.lock ? "bi bi-lock-fill" : "bi bi-unlock-fill"
+              }
             ></i>
+          </button>
+          <button
+            className="btn btn-warning"
+            //style={{ display: "block" }}
+            onClick={this.props.onToggleLock}
+          >
+            <i className="bi bi-upload"></i>
           </button>
         </div>
         <div style={{ height: 30 }} />
@@ -32,8 +43,9 @@ class Sidebar extends Component {
           {this.buttons.map((button) => {
             return (
               <button
-                class="btn btn-success"
-                style={{ display: "block" }}
+                key={button.key}
+                className="btn btn-success"
+                style={{ display: "block", marginBottom: 10 }}
                 onClick={() => this.props.add(button.type)}
               >
                 Add {button.label}

@@ -5,7 +5,7 @@ class Navbar extends Component {
     return (
       <nav className="navbar navbar-dark bg-primary justify-content-center">
         <a className="navbar-brand">
-          <i class="bi bi-pc-display-horizontal" />
+          <i className="bi bi-pc-display-horizontal" />
           {"  Rosbot Dashboard"}
         </a>
       </nav>
