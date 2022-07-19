@@ -6,35 +6,21 @@ class Publisher extends Component {
     return (
       <div className="bg-light">
         <form
-          onSubmit={(e) => this.props.handlers.onPublish(this.props.widget, e)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.props.handlers.onPublish(
+              this.props.widget,
+              this.props.widget.data
+            );
+          }}
         >
-          <label>
-            {"Topic: "}
-            <input
-              type="text"
-              value={this.props.widget.topic}
-              onChange={(e) =>
-                this.props.handlers.onEditTopic(this.props.widget, e)
-              }
-            />
-          </label>
-          <br />
-          <label>
-            {"Type: "}
-            <input
-              type="text"
-              value={this.props.type}
-              onChange={(e) =>
-                this.props.handlers.onEditDatatype(this.props.widget, e)
-              }
-            />
-          </label>
+          <label>Topic: {this.props.widget.topic}</label>
           <br />
           <label>
             {"Message: "}
             <input
               type="text"
-              value={this.props.data}
+              value={this.props.widget.data}
               onChange={(e) =>
                 this.props.handlers.onEditData(this.props.widget, e)
               }

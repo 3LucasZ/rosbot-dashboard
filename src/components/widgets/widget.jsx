@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import EditModal from "../edit-modal";
 import "../../styles/components.css";
 
 class Widget extends Component {
@@ -39,6 +40,10 @@ class Widget extends Component {
             this.props.handlers.onWidgetUp(this.props.widget, e)
           }
         >
+          <EditModal
+            widget={this.props.widget}
+            handlers={this.props.handlers}
+          />
           <button
             className="btn btn-danger"
             onClick={() =>

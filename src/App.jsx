@@ -152,15 +152,15 @@ class App extends React.Component {
       widgets: widgets,
     });
   };
-  handleEditData = (widget, data) => {
+  handleEditData = (widget, e) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    widgets[i].data = data;
+    widgets[i].data = e.target.value;
     this.setState({
       widgets: widgets,
     });
   };
-  handlePublish = (widget) => {
+  handlePublish = (widget, data) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
     var topic = new ROSLIB.Topic({
@@ -168,7 +168,13 @@ class App extends React.Component {
       name: widgets[i].topic,
       messageType: widgets[i].datatype,
     });
-    var msg = new ROSLIB.Message(JSON.parse(widgets[i].data));
+    var json;
+    try {
+      json = JSON.parse(data);
+    } catch (err) {
+      console.log("Error parsing JSON: ", data);
+    }
+    var msg = new ROSLIB.Message(json);
     topic.publish(msg);
   };
 }
