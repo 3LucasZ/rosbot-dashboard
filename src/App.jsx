@@ -2,15 +2,17 @@ import React from "react";
 import Widget from "./components/widgets/widget";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
+import Stream from "./components/stream";
 import * as ROSLIB from "roslib";
 
 class App extends React.Component {
   state = {
-    ros: new ROSLIB.Ros({ url: "ws://192.168.1.238:9090" }),
+    ros: new ROSLIB.Ros({ url: "ws://192.168.1.241:9090" }),
     widgets: [],
     lock: false,
     nextID: 0,
-    message: "",
+    message: "None",
+    image: "",
   };
   //dragging
   meta = {
@@ -30,7 +32,6 @@ class App extends React.Component {
         });
       });
   }
-
   render() {
     return (
       <div>
@@ -40,6 +41,12 @@ class App extends React.Component {
           onToggleLock={this.handleToggleLock}
           lock={this.state.lock}
         />
+        <Stream
+          ros={this.state.ros}
+          image={this.state.image}
+          handleImage={this.handleImage}
+        />
+
         {this.state.widgets.map((widget) => {
           return (
             <Widget
@@ -65,6 +72,13 @@ class App extends React.Component {
       </div>
     );
   }
+
+  //Stream: receive
+  handleImage = (data) => {
+    this.setState({
+      image: data,
+    });
+  };
 
   //Sidebar: add
   handleAdd = (type) => {

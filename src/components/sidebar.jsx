@@ -17,7 +17,12 @@ class Sidebar extends Component {
   ];
   render() {
     return (
-      <div>
+      <div
+        style={{
+          display: "inline-block",
+          verticalAlign: "top",
+        }}
+      >
         <div>
           <button
             className="btn btn-secondary"
