@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Publisher from "./widgets/publisher";
 import ROSJoystick from "./widgets/ros-joystick";
+import Subscriber from "./widgets/subscriber";
 
 class Sidebar extends Component {
   buttons = [
@@ -8,11 +9,19 @@ class Sidebar extends Component {
       key: 0,
       type: Publisher,
       label: "Publisher",
+      mode: "publisher",
     },
     {
       key: 1,
       type: ROSJoystick,
       label: "Joystick",
+      mode: "publisher",
+    },
+    {
+      key: 2,
+      type: Subscriber,
+      label: "Subscriber",
+      mode: "subscriber",
     },
   ];
   render() {
@@ -51,7 +60,7 @@ class Sidebar extends Component {
                 key={button.key}
                 className="btn btn-success"
                 style={{ display: "block", marginBottom: 10 }}
-                onClick={() => this.props.add(button.type)}
+                onClick={() => this.props.add(button.type, button.mode)}
               >
                 Add {button.label}
               </button>

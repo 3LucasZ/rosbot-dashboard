@@ -5,6 +5,7 @@ class Publisher extends Component {
   render() {
     return (
       <div className="bg-light">
+        <label>Topic: {this.props.widget.name}</label>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -14,10 +15,8 @@ class Publisher extends Component {
             );
           }}
         >
-          <label>Topic: {this.props.widget.topic}</label>
-          <br />
           <label>
-            {"Message: "}
+            {"Data: "}
             <input
               type="text"
               value={this.props.widget.data}

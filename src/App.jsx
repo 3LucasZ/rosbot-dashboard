@@ -54,6 +54,7 @@ class App extends React.Component {
               key={widget.id}
               widget={widget}
               handlers={{
+                //drag
                 onWidgetDown: this.handleWidgetDown,
                 onWidgetDrag: this.handleWidgetDrag,
                 onWidgetUp: this.handleWidgetUp,
@@ -62,6 +63,7 @@ class App extends React.Component {
                 //ROS
                 onEditTopic: this.handleEditTopic,
                 onEditDatatype: this.handleEditDatatype,
+                onSaveTopic: this.handleSaveTopic,
                 onEditData: this.handleEditData,
                 onPublish: this.handlePublish,
               }}
@@ -81,7 +83,7 @@ class App extends React.Component {
   };
 
   //Sidebar: add
-  handleAdd = (type) => {
+  handleAdd = (type, mode) => {
     var widgets = [...this.state.widgets];
     widgets.push({
       //locate
@@ -91,9 +93,15 @@ class App extends React.Component {
       x: 200,
       y: 200,
       //ROS
-      topic: "/chatter",
+      mode: mode,
+      name: "/chatter",
       datatype: "std_msgs/String",
       data: '{ "data": "Hello" }',
+      topic: new ROSLIB.Topic({
+        ros: this.state.ros,
+        name: "/chatter",
+        messageType: "std_msgs/String",
+      }),
     });
     this.setState({
       widgets: widgets,
@@ -149,11 +157,12 @@ class App extends React.Component {
   };
 
   // Widget: ROS
+  //Topic change
   handleEditTopic = (widget, e) => {
     //console.log("Lifted ", widget.id);
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    widgets[i].topic = e.target.value;
+    widgets[i].name = e.target.value;
     this.setState({
       widgets: widgets,
     });
@@ -166,6 +175,29 @@ class App extends React.Component {
       widgets: widgets,
     });
   };
+  handleSaveTopic = (widget) => {
+    const widgets = [...this.state.widgets];
+    const i = widgets.indexOf(widget);
+    if (widgets[i].mode == "subscriber") {
+      widgets[i].topic.unsubscribe();
+    }
+    widgets[i].topic = new ROSLIB.Topic({
+      ros: this.state.ros,
+      name: widgets[i].name,
+      messageType: widgets[i].datatype,
+    });
+    if (widgets[i].mode == "subscriber") {
+      widgets[i].topic.subscribe((msg) => {
+        this.handleNewData(widget, msg.data);
+      });
+    }
+    this.setState({
+      widgets: widgets,
+    });
+  };
+
+  //Topic Ops
+  //Publisher Ops
   handleEditData = (widget, e) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
@@ -177,11 +209,6 @@ class App extends React.Component {
   handlePublish = (widget, data) => {
     const widgets = [...this.state.widgets];
     const i = widgets.indexOf(widget);
-    var topic = new ROSLIB.Topic({
-      ros: this.state.ros,
-      name: widgets[i].topic,
-      messageType: widgets[i].datatype,
-    });
     var json;
     try {
       json = JSON.parse(data);
@@ -189,7 +216,18 @@ class App extends React.Component {
       console.log("Error parsing JSON: ", data);
     }
     var msg = new ROSLIB.Message(json);
-    topic.publish(msg);
+    widgets[i].topic.publish(msg);
+  };
+
+  //Subscriber Ops
+  handleNewData = (widget, data) => {
+    const widgets = [...this.state.widgets];
+    const i = widgets.indexOf(widget);
+    widgets[i].data = data;
+    this.setState({
+      widgets: widgets,
+    });
   };
 }
+
 export default App;

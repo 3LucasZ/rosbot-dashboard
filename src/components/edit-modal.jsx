@@ -30,7 +30,7 @@ function EditModal(props) {
               {"Topic: "}
               <input
                 type="text"
-                value={props.widget.topic}
+                value={props.widget.name}
                 onChange={(e) => props.handlers.onEditTopic(props.widget, e)}
               />
             </label>
@@ -47,8 +47,14 @@ function EditModal(props) {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
+          <Button
+            variant="secondary"
+            onClick={() => {
+              props.handlers.onSaveTopic(props.widget);
+              handleClose();
+            }}
+          >
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
